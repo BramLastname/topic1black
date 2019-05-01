@@ -1,0 +1,94 @@
+// pink confetti 6
+// series of examples for Programming in module 1
+// pinkish confettis with class, array, collission and creation on mouseclick
+// angelika mader, september 2015
+// altered by Bram M. Rouwhorst April 2019
+
+
+int maxconfetti = 30;
+Confetti[] confs=new Confetti[maxconfetti]; //this makes an array of 30 confettis
+int i=0;                           // number of confettis that is created already
+
+void setup(){
+  size(500,500);
+}
+
+void draw(){
+  background(0);
+  for (int k=0; k<i; k++)         // i contains the number of confettis created so far
+  { confs[k].move_confetti();
+    confs[k].collide();
+    confs[k].draw_confetti();}
+}
+
+void mousePressed(){        
+  if (i<maxconfetti)
+  { confs[i] = new Confetti(i);   // a new confetti is only created here!
+    i++;
+  };
+}
+
+class Confetti {
+
+  color c;        // a confetti has a colour
+  PVector position; // a confetti has a current location
+  float radius;    // a confetti has a radius;
+  PVector speed;  // a confetti has a speed
+  int id;         // a confetti knows here its number
+
+  Confetti(int j) {  //constructor: gives values to the variables
+    c= color(int(random(180, 255)), int(random(0, 150)), int(random(100, 200)));  //pinkish
+    float xpos;     // a confetti has an x-position
+    float ypos;     // a confetti has an y-position
+    radius=random(10, 25);
+    xpos=int(random(radius, width-radius));
+    ypos=int(random(radius, height-radius));
+    position = new PVector(xpos, ypos);
+
+    float dx;       // the confetti moves with some speed in x direction
+    float dy;       // the confetti moves with some speed in y direction
+    dx=int(random(-3, 4));               // speed in x-direction
+    while (dx==0) dx=int(random(-3, 4)); // dont want nonmoving confettis
+    dy=int(random(-3, 4));               // speed in y-direction
+    while (dy==0) dy=int(random(-3, 4)); // dont want nonmoving confettis
+    speed = new PVector(dx, dy);
+    id=j;
+  }
+
+  void draw_confetti() {
+    //noStroke();
+    fill(c);
+    ellipse(position.x, position.y, 2*radius, 2*radius);
+  }
+
+  void move_confetti() {
+    //if the confetti reaches the left wall or the right wall, it bounces
+    if ((position.x>width-radius-speed.x) || (position.x<radius-speed.x))  speed.x=-speed.x;
+    //if the confetti reaches the top wall or the botton wall, it bounces
+    if ((position.y>height-radius-speed.y) || (position.y<radius-speed.y))  speed.y=-speed.y;//
+    position= position.add(speed);
+  }
+
+  void collide() {
+    // compare each confetti with all confettis having a higher index
+    // where the actual highest index is i
+    for (int j = id + 1; j < i; j++) {
+      float distx = confs[j].position.x+confs[j].speed.x - position.x-speed.x;
+      float disty = confs[j].position.y+confs[j].speed.y - position.y-speed.y;
+      float distance = sqrt(distx*distx + disty*disty);
+      float minDist = confs[j].radius + radius;
+
+      if (distance < minDist) {    // physics of collission
+        float angle = atan2(disty, distx);
+        float sine = sin(angle);
+        float cosine = cos(angle); 
+        // change of the movement vector of the calling object
+        speed.x = cosine * speed.x + sine * speed.y;
+        speed.y = cosine * speed.y - sine * speed.x;
+        // change of the movement vector of the other object 
+        confs[j].speed.x = cosine * confs[j].speed.x + sine * confs[j].speed.y; 
+        confs[j].speed.y  = cosine * confs[j].speed.y - sine * confs[j].speed.x;
+      }
+    }
+  }
+}
