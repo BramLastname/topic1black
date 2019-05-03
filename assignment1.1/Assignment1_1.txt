@@ -1,0 +1,100 @@
+//Written by Bram M. Rouwhorst (s2107430 at University of Twente)
+//Press RIGHT ARROW to READ texto.txt
+//Press LEFT ARROW to READ texto.txt BACKWARDS
+//Press UP ARROW to COUNT E in texto.txt
+//Press DOWN ARROW to CHECK IF texto.txt IS A PALINDROME
+
+//DISCLAIMER: 
+//CHECK PALINDROME most likely will not recognise a palindrome if:
+//1. there are multiple words and/or multiple enters in texto.txt
+//2. there are non-letter and/or special characters in text.txt
+//3. there is a combination of Capitalised and non-capitalised letters in texto.txt
+
+String Texto;	 //Storage for texto.txt
+Tekens word;	//Storage for the commands
+
+void setup() {
+  String Texting[] = loadStrings("texto.txt"); //Reading texto.txt
+  Texto = join(Texting, " ");		      //Converting String[] to String
+  word = new Tekens();}			     //Should prevent NullPointerExceptions
+
+void draw() { 				   //void KeyPressed() didn't work
+  if (keyPressed == true) {
+    if (key == CODED) {			 //Filters out most buttons
+      if (keyCode == RIGHT) {
+        word.write();		       //Writes out texto.txt
+      } else if (keyCode == LEFT) {
+        word.reverse();		     //Writes out texto.txt in reversed order
+      } else if (keyCode == DOWN) {
+        print(Texto);
+        word.palindrome();		 //Checks the letters against eachother
+        if (word.palindrome==true) {	//Checks if texto.txt is a palindrome
+          println(" is a palindrome"); //Starts a new line
+        } else {
+          println(" is not a palindrome"); //Starts a new line
+        }
+      } else if (keyCode == UP) {
+        word.count();			//Counts the amount of E and e
+      }
+    }
+  }
+}
+
+class Tekens {
+  boolean palindrome;	//Could be taken out, but I wanted to show it off
+
+  Tekens() {palindrome = false;
+  }
+
+  void write() {
+    for (int i=0; i<Texto.length()-1; i++) {
+      print(Texto.charAt(i));  //selects the corrosponding character
+    }
+    println(Texto.charAt(Texto.length()-1)); //Starts a new line
+  }
+
+  void palindrome() {
+    for (int i=Texto.length()-1; i>0; ) {
+      if (i>(Texto.length()/2)) {
+        if (char(Texto.charAt(i)) == char(Texto.charAt(Texto.length()-1-i))) {
+          i--;
+        } else {
+          i=-1;
+          palindrome = false;
+        }
+      } else { 
+        i=-1;
+        palindrome = true;
+      }
+    }
+  }
+
+  void reverse() {
+    char e;
+    for (int i=Texto.length()-1; i>0; i--) {
+      e = Texto.charAt(i);
+      print(char(e));  //selects the corrosponding character
+    }
+    println(Texto.charAt(0)); //Starts a new line
+  }
+  void count() {
+    int[] chare = { 0, 0, 0}; //creates variables for e-count, E-count and total, all with intial value of 0.
+    char e = 'e';
+    char E = 'E';
+    for (int i=0; i<Texto.length(); i++) {
+      if (char(Texto.charAt(i)) == char(e)) {  //Checks for e
+        chare[0]=chare[0]+1;		      //Adds 1 to e-count
+        chare[2]=chare[2]+1;		     //Adds 1 to total
+      } else if (char(Texto.charAt(i)) == char(E)) { //Checks for E
+        chare[1]=chare[1]+1;			    //Adds 1 to E-count
+        chare[2]=chare[2]+1;			   //Adds 1 to total
+      }
+    }
+    print(chare[0]);	  //Amount of e
+    println(" times e"); //Starts a new line
+    print(chare[1]);	//Amount of E
+    println(" times E"); //Starts a new line
+    print(chare[2]);	//Total amount of E+e
+    println(" total"); //Starts a new line
+  }
+}

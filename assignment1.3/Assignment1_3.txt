@@ -1,0 +1,34 @@
+ //Written by Bram M. Rouwhorst (s2107430 at University of Twente)
+//PRESS MOUSE BUTTON to initiate
+
+int[] X = new int[500];        //initiallises 500 intergers
+Number number = new Number(); //storage for commands
+
+void setup() {
+  for (int i=0; i<500; i++) {     //selecting 
+    X[i] = int(random(0, 100));  //Assigning random value
+  }
+}
+
+void draw() {
+//float benchmark = 50
+  if (mousePressed == true) {   //starting condition
+    println(number.above(50)); //prints total and starts new line
+  }
+}
+
+class Number {
+
+  Number() {
+  }
+
+  int above(float x) {            //sets constant to go above
+    int above=0;                 //resets counter
+    for (int i=0; i<500; i++) { //selects a value
+      if (X[i] < x) {          //checks for higher values
+        above= above+1;       //adds confirmed higher values to the count
+      }
+    }
+    return above;          //returns amount of values above x
+  }
+}

@@ -1,0 +1,39 @@
+//Written by Bram M. Rouwhorst (s2107430 at University of Twente)
+//I used my assignment 1.1 as a basis
+//Press RIGHT ARROW to initiate
+
+String Texto;   //Stores binary
+Tekens word;   //Converts to decimal
+
+
+void setup() {
+  String Texting[] = loadStrings("texto.txt");   //imports binary
+  Texto = join(Texting, " ");		                //rewrites String[] to String
+  word = new Tekens();			        	         //enables converter
+}
+
+void draw() { 
+  if (keyPressed == true) {      //Starting condition
+    if (key == CODED) {     		//Starting condition
+      if (keyCode == RIGHT) {  //Starting condition
+        word.write();         //Gives command
+      } 
+    }
+  }
+}
+
+class Tekens {
+
+  Tekens() {
+  }
+
+  void write() {
+    int Temp=0;                               //Stores individual digits
+    int Total=0;                             //Keeps track of total value
+    for (int i=0; i<Texto.length(); i++) {                                  //Selects digit
+      Temp =(Texto.charAt(i)-char('0'))*int(pow(2,(Texto.length()-1-i)));  //calculates the corrosponding value
+      Total=Total+Temp;                                                   //Adds value to total
+    }
+    println(Total);                     //prints decimal value
+  }
+}
